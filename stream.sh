@@ -13,16 +13,12 @@ RTMP_SERVERS="[f=flv]rtmp://142.250.184.206/live/radio?access_token=84VzGMZuUrmf
 which mbuffer &>/dev/null || { echo "[ERROR] mbuffer not found" 1>&2; exit 1; }
 which ffmpeg &>/dev/null || { echo "[ERROR] ffmpeg not found" 1>&2; exit 1; }
 which jq &>/dev/null || { echo "[ERROR] jq not found" 1>&2; exit 1; }
-which ps &>/dev/null || { echo "[ERROR] ps not found" 1>&2; exit 1; }
 
 while true; do
     EXP_TIME=${1/ */};
-    if test $# -gt 0 -a "$(date +%s)" -ge "$EXP_TIME"; then
-        shift && set -- "$@";
-    fi
+    test $# -gt 0 -a "$(date +%s)" -ge "$EXP_TIME" && shift && set -- "$@";
 
-    echo ${1#* } > "$TMP_FILE";
-    mv "$TMP_FILE" "$TITLE_FILE";
+    echo ${1#* } > "$TMP_FILE" && mv "$TMP_FILE" "$TITLE_FILE";
 
     kill -0 "$(jobs -p | head -n 1)" &> /dev/null && { sleep 1s; continue; } || wait;
 
