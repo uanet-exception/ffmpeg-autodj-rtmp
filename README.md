@@ -1,7 +1,7 @@
-# **ffmpeg-autojd-rtmp**
+# **ffmpeg-autodj-rtmp**
 
 ## **Description**
-`ffmpeg-autojd-rtmp` - shell script that invokes ffmpeg process to stream mp3 files to rtmp server.
+`ffmpeg-autodj-rtmp` - shell script that invokes ffmpeg process to stream mp3 files to rtmp server.
 
 ## **Dependencies**
 * `mbuffer`
