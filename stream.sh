@@ -17,9 +17,9 @@ while true; do
     ffprobe -show_format -print_format json "$MP3_FILE" 2>/dev/null \
         | jq -r '.format | [.tags.artist,.tags.title] | join(" - ")' > "$TMP_FILE";
     mv "$TMP_FILE" "$TITLE_FILE";
-    ffmpeg -re -hide_banner -i "$MP3_FILE" -vn -acodec copy -f mpegts -;
+    ffmpeg -hide_banner -nostats -nostdin -i "$MP3_FILE" -vn -acodec copy -f mpegts -;
 done | mbuffer -q -c -m 512k | (
-    ffmpeg -hide_banner \
+    ffmpeg -hide_banner -nostats -nostdin \
         -stream_loop -1 -i "$VIDEO" \
         -err_detect explode \
         -i pipe:0 \
@@ -36,9 +36,11 @@ done | mbuffer -q -c -m 512k | (
         -deinterlace \
         -vcodec libx264 \
         -preset fast \
+        -vsync vfr \
         -filter_complex "drawtext=font=monospace:fontcolor=black:x=(w-100-text_w)/2:y=435:fontsize=30:textfile='$TITLE_FILE':reload=1" \
-        -g 60 \
-        -r 30 \
+        -g 50 \
+        -r 25 \
+        -flags +global_header \
         -f tee \
         -flvflags no_duration_filesize \
         $RTMP_SERVERS;
